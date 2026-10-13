@@ -52,7 +52,8 @@ let map_l_to_r wiring top_letter input_pos =
   normalize_pos (inverse - offset)
 
 let map_refl wiring input_pos =
-  index wiring.[normalize_pos input_pos]
+  let pos = normalize_pos input_pos in
+  index wiring.[pos]
 
 let rec map_plug plugs c =
   match plugs with
@@ -89,12 +90,13 @@ let step config =
   let rec advance carry = function
     | [] -> []
     | rotor :: rest ->
-        let should_step = carry || rotor.top_letter = rotor.rotor.turnover in
+        let should_step = carry || rest = [] in
         let next_top = if should_step then next_letter rotor.top_letter else rotor.top_letter in
         let carry_next = should_step && rotor.top_letter = rotor.rotor.turnover in
         { rotor = rotor.rotor; top_letter = next_top } :: advance carry_next rest
   in
-  { config with rotors = List.rev (advance true (List.rev config.rotors)) }
+  let rotated = advance true (List.rev config.rotors) in
+  { config with rotors = List.rev rotated }
 
 let rec cipher config s =
   if String.length s = 0 then

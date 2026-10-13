@@ -69,7 +69,7 @@ let suite =
 
     map_refl_test "identity reflector keeps letters fixed" "ABCDEFGHIJKLMNOPQRSTUVWXYZ" 0 0;
     map_refl_test "identity reflector keeps Z fixed" "ABCDEFGHIJKLMNOPQRSTUVWXYZ" 25 25;
-    map_refl_test "reflector B maps 0 to 7" "YRUHQSLDPXNGOKMIEBFZCWVJATH" 0 7;
+    map_refl_test "reflector B maps input 0 to the index of Y" "YRUHQSLDPXNGOKMIEBFZCWVJATH" 0 24;
 
     map_plug_test "empty plugboard leaves M unchanged" [] 'M' 'M';
     map_plug_test "plugboard swaps A and Z" [('A', 'Z')] 'A' 'Z';
@@ -96,14 +96,14 @@ let suite =
       plugboard = [];
     } 'G' 'P';
 
-    step_test "rightmost rotor advances one step" {
+    step_test "rightmost rotor advances and propagates turnover" {
       refl = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       rotors = [
         { rotor = { wiring = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; turnover = 'A' }; top_letter = 'A' };
         { rotor = { wiring = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; turnover = 'A' }; top_letter = 'A' };
       ];
       plugboard = [];
-    } ['A'; 'B'];
+    } ['B'; 'B'];
 
     step_test "turnover on middle rotor propagates left" {
       refl = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
